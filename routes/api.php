@@ -6,6 +6,7 @@ Route::post('login', 'API\AuthController@login');
 Route::post('register', 'API\AuthController@register');
 Route::post('social_login/{provider}','API\AuthController@socialLogin');
 Route::post('/not-registered-order','API\OrderController@notRegisteredOrder');
+Route::post('/set-password','API\AuthController@setPassword');
 
 Route::group(['middleware' => 'auth:api'], function(){
     Route::post('/get-auth-user', 'API\UserController@getCurrentUser');

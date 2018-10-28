@@ -12,6 +12,23 @@ use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
+    public function setPassword(Request $request){
+        $validator = Validator::make($request->all(), [
+            'token' => 'required|exists:users,confirm_token',
+            'password' => 'required'
+        ]);
+        $validator->validate();
+
+        $user = User::where('confirm_token',$request->token)->first();
+        $user->password = bcrypt($request->password);
+        $user->confirm_token = null;
+        $user->save();
+        $token =  $user->createToken(env('APP_NAME'))->accessToken;
+        $success['token'] = $token;
+        $success['user'] = $user;
+        return $this->successApiResponse('Login success', $success);
+
+    }
     public function login(Request $request){
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
             $user = Auth::user();

@@ -43,7 +43,7 @@ class NotRegisteredUserOrder extends Mailable
                         [
                             'dynamic_template_data' => [
                                 'name'  => $this->user->first_name,
-                                'url' => env('APP_URL').'/set-password?'.$this->user->confirm_token
+                                'url' => env('APP_URL').'/set-password?token='.$this->user->confirm_token
                             ],
                         ],
                     ],
