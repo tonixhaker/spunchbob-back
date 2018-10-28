@@ -176,6 +176,7 @@ return [
          * CORS
          */
         Barryvdh\Cors\ServiceProvider::class,
+        Sichikawa\LaravelSendgridDriver\SendgridTransportServiceProvider::class
 
 
     ],

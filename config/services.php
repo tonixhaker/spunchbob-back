@@ -41,5 +41,8 @@ return [
         'client_secret' => env ( 'G+_CLIENT_SECRET' ),
         'redirect' => env ( 'G+_REDIRECT' )
     ],
+    'sendgrid' => [
+        'api_key' => env('SENDGRID_API_KEY'),
+    ],
 
 ];

@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Mail\NotRegisteredUserOrder;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Sichikawa\LaravelSendgridDriver\Transport\SendgridTransport;
 
 class OrderController extends Controller
 {
@@ -52,7 +56,7 @@ class OrderController extends Controller
         $validator->validate();
         $user = User::where('email',$request->email)->first();
         if($user){
-            return $this->unauthorisedApiResponse('Пожалуйста залогинтесь');
+            return $this->unauthorisedApiResponse('Email exist');
         }
         $data = $request->only(User::getFillableFields());
         $data['confirm_token'] = bcrypt(str_random(32));
@@ -63,6 +67,25 @@ class OrderController extends Controller
             'type' => Order::TYPE_PERSONAL_MENU,
             'goals' => $request->goals
         ]);
+        //Mail::to('tonixhaker@gmail.com')->send(new NotRegisteredUserOrder($user));
+
+        Mail::send([], [], function (Message $message) {
+            $message
+                ->to('tonixhaker@gmail.com')
+                ->embedData([
+                    'personalizations' => [
+                        [
+                            'dynamic_template_data' => [
+                                'title' => 'Subject',
+                                'name'  => 's-ichikawa',
+                            ],
+                        ],
+                    ],
+                    'template_id' => 'd-b73199f6d79c497ea79a56f23152b610',
+                ], SendgridTransport::SMTP_API_NAME);
+        });
+
+
         return $this->successApiResponse();
     }
 }
