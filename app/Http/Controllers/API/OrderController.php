@@ -76,7 +76,6 @@ class OrderController extends Controller
                     'personalizations' => [
                         [
                             'dynamic_template_data' => [
-                                'title' => 'Subject',
                                 'name'  => 's-ichikawa',
                             ],
                         ],
