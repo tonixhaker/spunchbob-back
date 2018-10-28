@@ -37,17 +37,17 @@ class NotRegisteredUserOrder extends Mailable
     {
 
         return $this->view('emails.test')
-            ->subject('subject')
-            ->from('from@example.com')
-            ->to(['to@example.com'])
+            ->subject('Заказ принят!')
             ->sendgrid([
                 'personalizations' => [
-                    [
-                        'substitutions' => [
-                            ':myname' => 's-ichikawa',
+                        [
+                            'dynamic_template_data' => [
+                                'name'  => $this->user->first_name,
+                                'url' => env('APP_URL').'/set-password?'.$this->user->confirm_token
+                            ],
                         ],
                     ],
-                ],
+                    'template_id' => 'd-b73199f6d79c497ea79a56f23152b610',
             ]);
     }
 }
