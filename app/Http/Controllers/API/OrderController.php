@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Jobs\SendNotRegisteredUserOrder;
 use App\Mail\NotRegisteredUserOrder;
 use App\Models\Order;
 use App\Models\User;
@@ -67,24 +68,8 @@ class OrderController extends Controller
             'type' => Order::TYPE_PERSONAL_MENU,
             'goals' => $request->goals
         ]);
-        Mail::to('tonixhaker@gmail.com')->send(new NotRegisteredUserOrder($user));
-
-//        Mail::send([], [], function (Message $message) {
-//            $message
-//                ->to('tonixhaker@gmail.com')
-//                ->embedData([
-//                    'personalizations' => [
-//                        [
-//                            'dynamic_template_data' => [
-//                                'name'  => 's-ichikawa',
-//                            ],
-//                        ],
-//                    ],
-//                    'template_id' => 'd-b73199f6d79c497ea79a56f23152b610',
-//                ], SendgridTransport::SMTP_API_NAME);
-//        });
-
-
+        $job = (new SendNotRegisteredUserOrder($user));
+        dispatch($job);
         return $this->successApiResponse();
     }
 }
